@@ -6,38 +6,40 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/wangshizebin/jiebago"
 )
 
 func main() {
-	sentence := "Shell 位于用户与系统之间，用来帮助用户与操作系统进行沟通。我们通常所说的 Shell 都指的是文字模式的 Shell。"
+	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	fmt.Println("原始语句：", sentence)
 	fmt.Println()
 
 	// 默认模式分词
 	words := jiebago.Cut(sentence)
-	fmt.Println("默认模式分词：", words)
+	fmt.Println("默认模式分词：", strings.Join(words, "/"))
 
 	// 精确模式分词
 	words = jiebago.CutAccurate(sentence)
-	fmt.Println("精确模式分词：", words)
+	fmt.Println("精确模式分词：", strings.Join(words, "/"))
 
 	// 全模式分词
 	words = jiebago.CutFull(sentence)
-	fmt.Println("全模式分词：", words)
+	fmt.Println("全模式分词：", strings.Join(words, "/"))
 
 	// NoHMM模式分词
 	words = jiebago.CutNoHMM(sentence)
-	fmt.Println("NoHMM模式分词：", words)
+	fmt.Println("NoHMM模式分词：", strings.Join(words, "/"))
 
 	// 搜索引擎模式分词
 	words = jiebago.CutForSearch(sentence)
-	fmt.Println("搜索引擎模式分词：", words)
+	fmt.Println("搜索引擎模式分词：", strings.Join(words, "/"))
 	fmt.Println()
 
 	// 提取关键词，即Tag标签
 	keywords := jiebago.ExtractKeywords(sentence, 20)
-	fmt.Println("提取关键词：", keywords)
+	fmt.Println("提取关键词：", strings.Join(keywords, "/"))
 
 	// 提取带权重的关键词，即Tag标签
 	keywordsWeight := jiebago.ExtractKeywordsWeight(sentence, 20)
