@@ -20,6 +20,10 @@ go get github.com/wangshizebin/jiebagou
 使用 go mod 管理：
 代码中直接引用 github.com/wangshizebin/jiebagou 即可。
 
+## 特别注意
+
+由于分词和提取关键词使用了中文预置词库和TF-IDF统计库，所以使用 jiebago，需要先下载项目中词库 dictionary 目录，并将 dictionary 放入项目的工作目录中。
+
 ## 功能示例
 
 ```golang
@@ -123,10 +127,7 @@ cd api
 go test 
 ```
 
-## 注意问题
-
-
 ## Contact
 
 + Email: `wangzebin@vip.163.com`
-+ QQ: `931058240`
++ weixin: `bkra50`

@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -40,7 +41,7 @@ func TestCutWordsGet(t *testing.T) {
 			t.Error(err)
 			return
 		}
-		t.Log("结果：", w)
+		t.Log("结果：", strings.Join(w.Words, "/"))
 
 		words := []string{"Shell", "操作系统", "沟通"}
 		for _, word := range words {
@@ -80,7 +81,7 @@ func TestCutWordsPost(t *testing.T) {
 			t.Error(err)
 			return
 		}
-		t.Log("结果：", w)
+		t.Log("结果：", strings.Join(w.Words, "/"))
 
 		words := []string{"Shell", "操作系统", "沟通"}
 		for _, word := range words {
@@ -119,7 +120,7 @@ func TestExtractKeywordsGet(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log("结果：", w)
+	t.Log("结果：", strings.Join(w.Tags, "/"))
 
 	words := []string{"Shell", "操作系统", "用户"}
 	for _, word := range words {
@@ -158,7 +159,7 @@ func TestExtractKeywordsPost(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log("结果：", w)
+	t.Log("结果：", strings.Join(w.Tags, "/"))
 
 	words := []string{"Shell", "操作系统", "用户"}
 	for _, word := range words {
