@@ -1,6 +1,6 @@
 [![logo](http://static.codebaoku.com/images/blogo.png)](http://www.codebaoku.com)
 
-[JiebaGo]是 jieba 中文分词的 Go 语言版本。
+JiebaGo 是 jieba 中文分词的 Go 语言版本。
 
 ## 功能特点
 
