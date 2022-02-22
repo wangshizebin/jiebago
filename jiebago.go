@@ -10,11 +10,24 @@ import (
 	"github.com/wangshizebin/jiebago/tokenizer"
 )
 
-func Cut(sentence string) []string {
-	return CutAccurate(sentence)
+type JieBaGo struct {
 }
 
-func CutFull(s string) []string {
+func NewJieBaGo(path ...string) *JieBaGo {
+	configPath := ""
+	if len(path) > 0 {
+		configPath = path[0]
+	}
+	tokenizer.Init(configPath)
+	jieBaGo := &JieBaGo{}
+	return jieBaGo
+}
+
+func (g *JieBaGo) Cut(sentence string) []string {
+	return g.CutAccurate(sentence)
+}
+
+func (g *JieBaGo) CutFull(s string) []string {
 	wordsRet := make([]string, 0, tokenizer.DefaultWordsLen)
 
 	segments := tokenizer.SplitTextSeg(s)
@@ -31,7 +44,7 @@ func CutFull(s string) []string {
 	return wordsRet
 }
 
-func CutAccurate(s string) []string {
+func (g *JieBaGo) CutAccurate(s string) []string {
 	wordsRet := make([]string, 0, tokenizer.DefaultWordsLen)
 
 	segments := tokenizer.SplitTextSeg(s)
@@ -49,7 +62,7 @@ func CutAccurate(s string) []string {
 	return wordsRet
 }
 
-func CutNoHMM(s string) []string {
+func (g *JieBaGo) CutNoHMM(s string) []string {
 	wordsRet := make([]string, 0, tokenizer.DefaultWordsLen)
 
 	segments := tokenizer.SplitTextSeg(s)
@@ -67,7 +80,7 @@ func CutNoHMM(s string) []string {
 	return wordsRet
 }
 
-func CutForSearch(s string) []string {
+func (g *JieBaGo) CutForSearch(s string) []string {
 	wordsRet := make([]string, 0, tokenizer.DefaultWordsLen)
 
 	segments := tokenizer.SplitTextSeg(s)
@@ -76,7 +89,7 @@ func CutForSearch(s string) []string {
 			continue
 		}
 		if tokenizer.IsTextChars(segment) {
-			cutForSearchW(segment, &wordsRet)
+			g.cutForSearchW(segment, &wordsRet)
 		} else {
 			tokenizer.CutSymbolW(segment, &wordsRet)
 		}
@@ -85,10 +98,10 @@ func CutForSearch(s string) []string {
 	return wordsRet
 }
 
-func cutForSearchW(s string, words *[]string) {
+func (g *JieBaGo) cutForSearchW(s string, words *[]string) {
 	dictionary := tokenizer.GetDictionary()
 
-	for _, word := range CutAccurate(s) {
+	for _, word := range g.CutAccurate(s) {
 		wordRune := []rune(word)
 		if len(wordRune) > 2 {
 			for i := 0; i < len(wordRune)-1; i++ {
@@ -110,20 +123,20 @@ func cutForSearchW(s string, words *[]string) {
 	}
 }
 
-func ExtractKeywords(s string, count int) []string {
+func (g *JieBaGo) ExtractKeywords(s string, count int) []string {
 	keywords := tokenizer.GetTFIDF().ExtractKeywords(s, count, false)
 	return keywords.([]string)
 }
 
-func ExtractKeywordsWeight(s string, count int) []tokenizer.Keyword {
+func (g *JieBaGo) ExtractKeywordsWeight(s string, count int) []tokenizer.Keyword {
 	keywords := tokenizer.GetTFIDF().ExtractKeywords(s, count, true)
 	return []tokenizer.Keyword(keywords.(tokenizer.Keywords))
 }
 
-func AddDictWord(word string, freq int, prop string) (exist bool, err error) {
+func (g *JieBaGo) AddDictWord(word string, freq int, prop string) (exist bool, err error) {
 	return tokenizer.GetDictionary().AddWord(word, freq, prop)
 }
 
-func AddStopWord(word string) (exist bool, err error) {
+func (g *JieBaGo) AddStopWord(word string) (exist bool, err error) {
 	return tokenizer.GetTFIDF().AddStopWord(word)
 }

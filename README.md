@@ -23,6 +23,11 @@ go get github.com/wangshizebin/jiebagou
 ## 特别注意
 
 由于分词和提取关键词使用了中文预置词库和TF-IDF统计库，所以使用 jiebago，需要先下载项目中词库 dictionary 目录，并将 dictionary 放入项目的工作目录中。
+我们也可以自己指定字典库的位置，不过需要在初始化 jiebago 对象的时候进行设置：
+
+```golang
+jieBaGo := jiebago.NewJieBaGo("/data/mydict")
+```
 
 ## 功能示例
 
@@ -37,42 +42,46 @@ import (
 )
 
 func main() {
+	jieBaGo := jiebago.NewJieBaGo()
+	// 可以指定字典库的位置
+	// jieBaGo := jiebago.NewJieBaGo("/data/mydict")
+
 	sentence := "Shell 位于用户与系统之间，用来帮助用户与操作系统进行沟通。通常都是文字模式的 Shell。"
 	fmt.Println("原始语句：", sentence)
 	fmt.Println()
 
 	// 默认模式分词
-	words := jiebago.Cut(sentence)
+	words := jieBaGo.Cut(sentence)
 	fmt.Println("默认模式分词：", strings.Join(words,"/"))
 
 	// 精确模式分词
-	words = jiebago.CutAccurate(sentence)
+	words = jieBaGo.CutAccurate(sentence)
 	fmt.Println("精确模式分词：", strings.Join(words,"/"))
 
 	// 全模式分词
-	words = jiebago.CutFull(sentence)
+	words = jieBaGo.CutFull(sentence)
 	fmt.Println("全模式分词：", strings.Join(words,"/"))
 
 	// NoHMM模式分词
-	words = jiebago.CutNoHMM(sentence)
+	words = jieBaGo.CutNoHMM(sentence)
 	fmt.Println("NoHMM模式分词：", strings.Join(words,"/"))
 
 	// 搜索引擎模式分词
-	words = jiebago.CutForSearch(sentence)
+	words = jieBaGo.CutForSearch(sentence)
 	fmt.Println("搜索引擎模式分词：", strings.Join(words,"/"))
 	fmt.Println()
 
 	// 提取关键词，即Tag标签
-	keywords := jiebago.ExtractKeywords(sentence, 20)
+	keywords := jieBaGo.ExtractKeywords(sentence, 20)
 	fmt.Println("提取关键词：", strings.Join(keywords,"/"))
 
 	// 提取带权重的关键词，即Tag标签
-	keywordsWeight := jiebago.ExtractKeywordsWeight(sentence, 20)
+	keywordsWeight := jieBaGo.ExtractKeywordsWeight(sentence, 20)
 	fmt.Println("提取带权重的关键词：", keywordsWeight)
 	fmt.Println()
 
 	// 向字典加入单词
-	exist, err := jiebago.AddDictWord("编程宝库", 3, "n")
+	exist, err := jieBaGo.AddDictWord("编程宝库", 3, "n")
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -83,7 +92,7 @@ func main() {
 	}
 
 	// 向字典加入停止词
-	exist, err = jiebago.AddStopWord("the")
+	exist, err = jieBaGo.AddStopWord("the")
 	if err != nil {
 		fmt.Println(err)
 	} else {

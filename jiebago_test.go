@@ -5,42 +5,44 @@
 package jiebago
 
 import (
+	"strings"
 	"testing"
 )
 
 var (
-	sentence  = "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
-	wordsTest = []string{"Shell", "操作系统", "沟通"}
+	sentence   = "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
+	resultTest = []string{"Shell", "操作系统", "沟通"}
+	jieBaGo    = NewJieBaGo()
 )
 
 func TestCut(t *testing.T) {
-	testCutWords(Cut, t)
+	testCutWords(jieBaGo.Cut, t)
 }
 
 func TestCutFull(t *testing.T) {
-	testCutWords(CutFull, t)
+	testCutWords(jieBaGo.CutFull, t)
 }
 
 func TestCutAccurate(t *testing.T) {
-	testCutWords(CutAccurate, t)
+	testCutWords(jieBaGo.CutAccurate, t)
 }
 
 func TestCutNoHMM(t *testing.T) {
-	testCutWords(CutNoHMM, t)
+	testCutWords(jieBaGo.CutNoHMM, t)
 }
 
 func TestCutForSearch(t *testing.T) {
-	testCutWords(CutForSearch, t)
+	testCutWords(jieBaGo.CutForSearch, t)
 }
 
 func TestExtractKeywords(t *testing.T) {
 	t.Log("原始语句： " + sentence)
 
-	wordsResult := ExtractKeywords(sentence, 20)
-	t.Log("提取关键字：", wordsResult)
-	for _, word := range wordsTest {
+	words := jieBaGo.ExtractKeywords(sentence, 20)
+	t.Log("提取关键字：", strings.Join(words, "/"))
+	for _, word := range resultTest {
 		ok := false
-		for _, v := range wordsResult {
+		for _, v := range words {
 			if word == v {
 				ok = true
 			}
@@ -56,11 +58,11 @@ func TestExtractKeywords(t *testing.T) {
 func TestExtractKeywordsWeight(t *testing.T) {
 	t.Log("原始语句： " + sentence)
 
-	wordsResult := ExtractKeywordsWeight(sentence, 20)
-	t.Log("提取关键字：", wordsResult)
-	for _, word := range wordsTest {
+	words := jieBaGo.ExtractKeywordsWeight(sentence, 20)
+	t.Log("提取关键字：", words)
+	for _, word := range resultTest {
 		ok := false
-		for _, v := range wordsResult {
+		for _, v := range words {
 			if word == v.Word {
 				ok = true
 			}
@@ -77,7 +79,7 @@ func TestAddWordToDict(t *testing.T) {
 	words := []string{"编程宝库", "王泽宾", "codebaoku"}
 	t.Log("加入词典：", words)
 	for _, word := range words {
-		exist, err := AddDictWord(word, 3, "n")
+		exist, err := jieBaGo.AddDictWord(word, 3, "n")
 		if err != nil {
 			t.Error(err)
 		} else {
@@ -94,7 +96,7 @@ func TestAddStopWord(t *testing.T) {
 	words := []string{"the", "of", "is"}
 	t.Log("加入停止词：", words)
 	for _, word := range words {
-		exist, err := AddStopWord(word)
+		exist, err := jieBaGo.AddStopWord(word)
 		if err != nil {
 			t.Error(err)
 		} else {
@@ -111,8 +113,8 @@ func testCutWords(f func(string) []string, t *testing.T) {
 	t.Log("原始语句： " + sentence)
 
 	wordsResult := f(sentence)
-	t.Log("分词结果：", wordsResult)
-	for _, word := range wordsTest {
+	t.Log("分词结果：", strings.Join(wordsResult, "/"))
+	for _, word := range resultTest {
 		ok := false
 		for _, v := range wordsResult {
 			if word == v {

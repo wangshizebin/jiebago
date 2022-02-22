@@ -161,11 +161,7 @@ func (d *Dictionary) load(fileDict string) error {
 	return nil
 }
 
-func GetDictionary() *Dictionary {
-	return dictionary
-}
-
-func init() {
+func InitDictionary() {
 	// load the standard dictionary
 	dictStdFile, err := GetDictFile(DictStdFile)
 	if err != nil {
@@ -181,4 +177,8 @@ func init() {
 	if err == nil {
 		dictionary.load(dictUserFile)
 	}
+}
+
+func GetDictionary() *Dictionary {
+	return dictionary
 }

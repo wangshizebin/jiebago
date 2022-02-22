@@ -20,8 +20,12 @@ import (
 	"github.com/wangshizebin/jiebago/tokenizer"
 )
 
+var (
+	sentence   = "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
+	resultTest = []string{"Shell", "操作系统", "用户"}
+)
+
 func TestCutWordsGet(t *testing.T) {
-	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	t.Log(sentence)
 
 	url := "http://localhost:8118/cut_words?s=" + sentence
@@ -43,8 +47,7 @@ func TestCutWordsGet(t *testing.T) {
 		}
 		t.Log("结果：", strings.Join(w.Words, "/"))
 
-		words := []string{"Shell", "操作系统", "沟通"}
-		for _, word := range words {
+		for _, word := range resultTest {
 			ok := false
 			for _, v := range w.Words {
 				if word == v {
@@ -61,7 +64,6 @@ func TestCutWordsGet(t *testing.T) {
 }
 
 func TestCutWordsPost(t *testing.T) {
-	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	t.Log(sentence)
 
 	url := "http://localhost:8118/cut_words"
@@ -83,8 +85,7 @@ func TestCutWordsPost(t *testing.T) {
 		}
 		t.Log("结果：", strings.Join(w.Words, "/"))
 
-		words := []string{"Shell", "操作系统", "沟通"}
-		for _, word := range words {
+		for _, word := range resultTest {
 			ok := false
 			for _, v := range w.Words {
 				if word == v {
@@ -101,7 +102,6 @@ func TestCutWordsPost(t *testing.T) {
 }
 
 func TestExtractKeywordsGet(t *testing.T) {
-	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	t.Log(sentence)
 
 	url := "http://localhost:8118/extract_keywords?s=" + sentence + "&count=3"
@@ -120,10 +120,9 @@ func TestExtractKeywordsGet(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log("结果：", strings.Join(w.Tags, "/"))
+	t.Log("提取关键字：", strings.Join(w.Tags, "/"))
 
-	words := []string{"Shell", "操作系统", "用户"}
-	for _, word := range words {
+	for _, word := range resultTest {
 		ok := false
 		for _, v := range w.Tags {
 			if word == v {
@@ -139,7 +138,6 @@ func TestExtractKeywordsGet(t *testing.T) {
 }
 
 func TestExtractKeywordsPost(t *testing.T) {
-	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	t.Log(sentence)
 
 	url := "http://localhost:8118/extract_keywords"
@@ -159,10 +157,9 @@ func TestExtractKeywordsPost(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log("结果：", strings.Join(w.Tags, "/"))
+	t.Log("提取关键字：", strings.Join(w.Tags, "/"))
 
-	words := []string{"Shell", "操作系统", "用户"}
-	for _, word := range words {
+	for _, word := range resultTest {
 		ok := false
 		for _, v := range w.Tags {
 			if word == v {
@@ -178,7 +175,6 @@ func TestExtractKeywordsPost(t *testing.T) {
 }
 
 func TestExtractKeywordsWeightGet(t *testing.T) {
-	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	t.Log(sentence)
 
 	url := "http://localhost:8118/extract_keywords?s=" + sentence + "&mode=weight&count=3"
@@ -197,10 +193,9 @@ func TestExtractKeywordsWeightGet(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log("结果：", w)
+	t.Log("提取关键字：", w)
 
-	words := []string{"Shell", "操作系统", "用户"}
-	for _, word := range words {
+	for _, word := range resultTest {
 		ok := false
 		for _, v := range w.Tags {
 			if word == v.Word {
@@ -216,7 +211,6 @@ func TestExtractKeywordsWeightGet(t *testing.T) {
 }
 
 func TestExtractKeywordsWeightPost(t *testing.T) {
-	sentence := "Shell位于用户与系统之间，用来帮助用户与操作系统进行沟通。"
 	t.Log(sentence)
 
 	url := "http://localhost:8118/extract_keywords"
@@ -236,10 +230,9 @@ func TestExtractKeywordsWeightPost(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	t.Log("结果：", w)
+	t.Log("提取关键字：", w)
 
-	words := []string{"Shell", "操作系统", "用户"}
-	for _, word := range words {
+	for _, word := range resultTest {
 		ok := false
 		for _, v := range w.Tags {
 			if word == v.Word {

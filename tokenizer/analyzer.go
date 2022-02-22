@@ -300,11 +300,7 @@ func (t *TFIDF) AddStopWord(word string) (exist bool, err error) {
 	return t.stopWords.add(word)
 }
 
-func GetTFIDF() *TFIDF {
-	return tfIDF
-}
-
-func init() {
+func InitTFIDF() {
 	// load the tf-idf library
 	idfFile, err := GetDictFile(IDFStdFile)
 	if err != nil {
@@ -327,4 +323,8 @@ func init() {
 	if err == nil {
 		tfIDF.stopWords.load(stopWordsUserFile)
 	}
+}
+
+func GetTFIDF() *TFIDF {
+	return tfIDF
 }

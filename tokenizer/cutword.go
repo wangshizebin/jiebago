@@ -165,3 +165,10 @@ func CutSymbolW(s string, words *[]string) {
 		}
 	}
 }
+
+func Init(dictPath string) {
+	SetDictPath(dictPath)
+	InitDictionary()
+	InitTFIDF()
+	InitFSToken()
+}

@@ -19,7 +19,15 @@ const (
 )
 
 var (
-	fsTokenizer *FinalSeg
+	fsTokenizer = &FinalSeg{
+		start: make(map[string]float64),
+		trans: make(map[string]map[string]float64),
+		emit:  make(map[string]map[string]float64),
+
+		forceSplitWords: &forceSplitWords{
+			dict: make(map[string]struct{}),
+		},
+	}
 
 	prevStatus = map[string][]string{
 		"B": {"E", "S"},
@@ -195,16 +203,7 @@ func GetFinalSeg() *FinalSeg {
 	return fsTokenizer
 }
 
-func init() {
-	fsTokenizer = &FinalSeg{
-		start: make(map[string]float64),
-		trans: make(map[string]map[string]float64),
-		emit:  make(map[string]map[string]float64),
-
-		forceSplitWords: &forceSplitWords{
-			dict: make(map[string]struct{}),
-		},
-	}
+func InitFSToken() {
 	readJsonFromFile(finalSegProbStart, &fsTokenizer.start)
 	readJsonFromFile(finalSegProbTrans, &fsTokenizer.trans)
 	readJsonFromFile(finalSegProbEmit, &fsTokenizer.emit)

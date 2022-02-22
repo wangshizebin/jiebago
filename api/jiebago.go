@@ -28,10 +28,20 @@ const (
 	ErrorCountInteger
 )
 
+var (
+	jieBaGo = &jiebago.JieBaGo{}
+)
+
 func main() {
 	httpAddr := flag.String("http_addr", ":8118",
-		"http_addr specifies the listening ip and port, for example: \":8118\", \"1.2.3.4:8888\"")
+		"http_addr specifies the listening ip and port, for example: -http_addr 1.2.3.4:8888")
+
+	dictPath := flag.String("dict_path", "",
+		"dict_path specifies the path of dictionary, for example: -dict_path /data/dictionary")
+
 	flag.Parse()
+
+	jieBaGo = jiebago.NewJieBaGo(*dictPath)
 
 	engine := gin.Default()
 
@@ -107,15 +117,15 @@ func cutWordsHandler(c *gin.Context) {
 
 	var words []string
 	if mode == "full" {
-		words = jiebago.CutFull(sentence)
+		words = jieBaGo.CutFull(sentence)
 	} else if mode == "accurate" {
-		words = jiebago.CutAccurate(sentence)
+		words = jieBaGo.CutAccurate(sentence)
 	} else if mode == "nohmm" {
-		words = jiebago.CutNoHMM(sentence)
+		words = jieBaGo.CutNoHMM(sentence)
 	} else if mode == "search" {
-		words = jiebago.CutForSearch(sentence)
+		words = jieBaGo.CutForSearch(sentence)
 	} else {
-		words = jiebago.Cut(sentence)
+		words = jieBaGo.Cut(sentence)
 	}
 
 	c.JSON(http.StatusOK, struct {
@@ -190,8 +200,7 @@ func extractKeywordsHandler(c *gin.Context) {
 	}
 
 	if mode == "weight" {
-		keywords := tokenizer.GetTFIDF().ExtractKeywords(sentence, count, true)
-		tags := []tokenizer.Keyword(keywords.(tokenizer.Keywords))
+		tags := jieBaGo.ExtractKeywordsWeight(sentence, count)
 		c.JSON(http.StatusOK, struct {
 			Response
 			Tags []tokenizer.Keyword `json:"tags"`
@@ -203,8 +212,7 @@ func extractKeywordsHandler(c *gin.Context) {
 			Tags: tags,
 		})
 	} else {
-		keywords := tokenizer.GetTFIDF().ExtractKeywords(sentence, count, false)
-		tags := keywords.([]string)
+		tags := jieBaGo.ExtractKeywords(sentence, count)
 		c.JSON(http.StatusOK, struct {
 			Response
 			Tags []string `json:"tags"`
@@ -271,7 +279,7 @@ func addDictWordHandler(c *gin.Context) {
 		prop = "n"
 	}
 
-	exist, err := jiebago.AddDictWord(word, weight, prop)
+	exist, err := jieBaGo.AddDictWord(word, weight, prop)
 	if err != nil {
 		c.JSON(http.StatusOK, Response{
 			ErrCode: ErrorFail,
@@ -316,7 +324,7 @@ func addStopWordHandler(c *gin.Context) {
 		return
 	}
 
-	exist, err := jiebago.AddStopWord(word)
+	exist, err := jieBaGo.AddStopWord(word)
 	if err != nil {
 		c.JSON(http.StatusOK, Response{
 			ErrCode: ErrorFail,

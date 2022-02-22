@@ -31,11 +31,13 @@ const (
 )
 
 var (
-	reEnglish   *regexp.Regexp // precompiled English regular expression
-	reChinese   *regexp.Regexp // precompiled Chinese regular expression
-	reText      *regexp.Regexp // precompiled text regular expression
-	reNumber    *regexp.Regexp // precompiled numeric regular expression
-	reDelimiter *regexp.Regexp // precompiled delimiter regular expression
+	reEnglish, _   = regexp.Compile(RegExpEnglish)   // precompiled English regular expression
+	reChinese, _   = regexp.Compile(RegExpChinese)   // precompiled Chinese regular expression
+	reText, _      = regexp.Compile(RegExpText)      // precompiled text regular expression
+	reNumber, _    = regexp.Compile(RegExpNumber)    // precompiled numeric regular expression
+	reDelimiter, _ = regexp.Compile(RegExpDelimiter) // precompiled delimiter regular expression
+
+	dictPath string // dictionary directory, default is current work directory
 )
 
 func IsEnglishChars(s string) bool {
@@ -69,14 +71,25 @@ func SplitNumberSeg(s string) []string {
 func GetDictFile(file string) (string, error) {
 	errFileNotFound := errors.New("unable to load the dictionary file")
 
+	dictPath := ""
+	if GetDictPath() != "" {
+		dictPath = filepath.Join(GetDictPath(), file)
+		if !fileExist(dictPath) {
+			return "", errFileNotFound
+		}
+		return dictPath, nil
+	}
+
 	dictFile := fmt.Sprintf("%cdictionary%c%s", os.PathSeparator, os.PathSeparator, file)
+
+	// check exe file directory
 	path, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Println(err)
 		return "", errFileNotFound
 	}
 
-	dictPath := path + dictFile
+	dictPath = path + dictFile
 	if !fileExist(dictPath) {
 		path, err = os.Getwd()
 		if err != nil {
@@ -85,6 +98,7 @@ func GetDictFile(file string) (string, error) {
 		}
 	}
 
+	// check work directory
 	dictPath = path + dictFile
 	if !fileExist(dictPath) {
 		path = getParentPath(path)
@@ -93,6 +107,7 @@ func GetDictFile(file string) (string, error) {
 		}
 	}
 
+	// check parent of work directory
 	dictPath = path + dictFile
 	if !fileExist(dictPath) {
 		return "", errFileNotFound
@@ -145,11 +160,10 @@ func substrRune(s string, pos, length int) string {
 	return string(runes[pos:l])
 }
 
-func init() {
-	// Precompile regular expressions to improve runtime efficiency
-	reEnglish, _ = regexp.Compile(RegExpEnglish)
-	reChinese, _ = regexp.Compile(RegExpChinese)
-	reText, _ = regexp.Compile(RegExpText)
-	reNumber, _ = regexp.Compile(RegExpNumber)
-	reDelimiter, _ = regexp.Compile(RegExpDelimiter)
+func GetDictPath() string {
+	return dictPath
+}
+
+func SetDictPath(path string) {
+	dictPath = path
 }
