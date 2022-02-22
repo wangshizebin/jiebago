@@ -14,11 +14,11 @@ JiebaGo 是 jieba 中文分词的 Go 语言版本。
 
 不使用包管理工具：
 ```bash
-go get github.com/wangshizebin/jiebagou
+go get github.com/wangshizebin/jiebago
 ```
 
 使用 go mod 管理：
-代码中直接引用 github.com/wangshizebin/jiebagou 即可。
+代码中直接引用 github.com/wangshizebin/jiebago 即可。
 
 ## 特别注意
 
